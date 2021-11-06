@@ -1,0 +1,19 @@
+Nom Alumne 1.....: Bruno
+Cognoms Alumne 1.: Moya Ruiz
+NIU Alumne 1.....:1568176
+NIUSAlumnes.csv readed
+
+Nom Alumne 2.....: Marc
+Cognoms Alumne 2.: Garrofe Urrutia
+NIU Alumne 2.....:1565644
+NIUSAlumnes.csv readed
+
+NARGS 5
+PARAMETROS:
+Algoritmo..: greedy
+Grafo......: TestSalesman\Graf10_20_3.GR
+Visitas....: TestSalesman\Graf10_20_3.VIS
+Track......: Outputs\Graf10_20_3_SalesmanGreedy.TRK
+Leer vertices
+Leer Aristas
+Fin lectura

@@ -1,0 +1,20 @@
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Simple_SalesmanGreedy_Out.txt greedy TestSalesman\Simple.GR TestSalesman\Simple.VIS Outputs\Simple_SalesmanGreedy.TRK
+TOTAL TIME=0.075132
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\GreedyNoOptimo_SalesmanGreedy_Out.txt greedy TestSalesman\GreedyNoOptimo.GR TestSalesman\GreedyNoOptimo.VIS Outputs\GreedyNoOptimo_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\GreedyNoOptimo_SalesmanGreedy_Out.txt greedy TestSalesman\GreedyNoOptimo.GR TestSalesman\GreedyNoOptimo.VIS Outputs\GreedyNoOptimo_SalesmanGreedy.TRK
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf10_20_3_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_3.GR TestSalesman\Graf10_20_3.VIS Outputs\Graf10_20_3_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\Graf10_20_3_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_3.GR TestSalesman\Graf10_20_3.VIS Outputs\Graf10_20_3_SalesmanGreedy.TRK
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf10_20_5_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_5.GR TestSalesman\Graf10_20_5.VIS Outputs\Graf10_20_5_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\Graf10_20_5_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_5.GR TestSalesman\Graf10_20_5.VIS Outputs\Graf10_20_5_SalesmanGreedy.TRK
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf10_20_6_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_6.GR TestSalesman\Graf10_20_6.VIS Outputs\Graf10_20_6_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\Graf10_20_6_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_20_6.GR TestSalesman\Graf10_20_6.VIS Outputs\Graf10_20_6_SalesmanGreedy.TRK
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf10_40_4_SalesmanGreedy_Out.txt greedy TestSalesman\Graf10_40_4.GR TestSalesman\Graf10_40_4.VIS Outputs\Graf10_40_4_SalesmanGreedy.TRK
+TOTAL TIME=0.028635
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\graf20_100_4_SalesmanGreedy_Out.txt greedy TestSalesman\graf20_100_4.GR TestSalesman\graf20_100_4.VIS Outputs\graf20_100_4_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\graf20_100_4_SalesmanGreedy_Out.txt greedy TestSalesman\graf20_100_4.GR TestSalesman\graf20_100_4.VIS Outputs\graf20_100_4_SalesmanGreedy.TRK
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\graf30_300_8_SalesmanGreedy_Out.txt greedy TestSalesman\graf30_300_8.GR TestSalesman\graf30_300_8.VIS Outputs\graf30_300_8_SalesmanGreedy.TRK
+TOTAL TIME=0.026343
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf50_200_6_SalesmanGreedy_Out.txt greedy TestSalesman\Graf50_200_6.GR TestSalesman\Graf50_200_6.VIS Outputs\Graf50_200_6_SalesmanGreedy.TRK
+TOTAL TIME=0.026635
+RUN (4.000000): "x64\Release\GraphApplication.exe" Outputs\Graf50_200_7C_SalesmanGreedy_Out.txt greedy TestSalesman\Graf50_200_7C.GR TestSalesman\Graf50_200_7C.VIS Outputs\Graf50_200_7C_SalesmanGreedy.TRK
+TIME OUT 4.000000.Kill command: "x64\Release\GraphApplication.exe" Outputs\Graf50_200_7C_SalesmanGreedy_Out.txt greedy TestSalesman\Graf50_200_7C.GR TestSalesman\Graf50_200_7C.VIS Outputs\Graf50_200_7C_SalesmanGreedy.TRK
