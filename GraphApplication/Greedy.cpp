@@ -17,8 +17,9 @@ CTrack ShortestPath(CGraph& graph, CVertex* begin, CVertex* end) {
 	}
 	else {
 		/*
-			Comencem desde el vertex final cap al inici.
+			Comencem desde el vertex final cap al inici, mirant de edge en edge fins que arrivem al edge d'inici.
 		*/
+
 		CVertex* vertex = end;
 		while (vertex->m_Name != begin->m_Name) {
 			for (CEdge* edge : vertex->m_Edges) {
@@ -112,6 +113,8 @@ CTrack SalesmanTrackGreedy(CGraph& graph, CVisits &visits)
 		}
 
 	}
+
+	/* Ens queda el ultim troç entre la penultima ciutat i la ciutat desti*/
 
 	DijkstraQueue(graph, v);
 	
