@@ -8,6 +8,7 @@ void inicialitzaVertexs(CGraph& graph)
 	for (list<CVertex>::iterator it = graph.m_Vertices.begin(); it != graph.m_Vertices.end(); it++) {
 		it->m_DijkstraDistance = numeric_limits<double>::max();
 		it->m_DijkstraVisit = false;
+		// it->m_DijkstraAnterior = NULL;
 	}
 }
 
@@ -84,6 +85,7 @@ struct MyStruct
 {
 	CVertex* pV1;
 	double m_DijkstraDistance;
+	CEdge* anterior;				// Revisar
 };
 
 
@@ -105,9 +107,11 @@ void DijkstraQueue(CGraph& graph, CVertex* pStart)
 	struct MyStruct start;
 	pStart->m_DijkstraDistance = 0;
 	pStart->m_DijkstraVisit = true;
+	pStart->m_DijkstraAnterior = NULL;
 
 	start.m_DijkstraDistance = 0;
 	start.pV1 = pStart;
+	start.anterior = NULL;
 
 	queue.push(start);
 
@@ -122,17 +126,16 @@ void DijkstraQueue(CGraph& graph, CVertex* pStart)
 			double pActual_distance = pActual.m_DijkstraDistance + edge_length;
 			if ((*it)->m_pDestination->m_DijkstraDistance > pActual_distance) {
 				(*it)->m_pDestination->m_DijkstraDistance = pActual_distance;
+				(*it)->m_pDestination->m_DijkstraAnterior = *it;					// Guardem al node desti l'aresta mínima distància
 				
 				if (!(*it)->m_pDestination->m_DijkstraVisit) {
 					struct MyStruct start;
-					
 					start.m_DijkstraDistance = pActual_distance;
 					start.pV1 = (*it)->m_pDestination;
+					start.anterior = *it;
 					queue.push(start);
 				}
 			}
 		}
 	}
-
-
 }

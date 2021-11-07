@@ -294,6 +294,10 @@ public:
 	list<CEdge*> m_Edges;
 	// Atributos de Dijkstra
 	double m_DijkstraDistance;
+
+	// Definim variable amb l'aresta anterior trobada amb Dijkstra
+	CEdge* m_DijkstraAnterior;
+
 	// Atributs per Kruskal
 	int m_KruskalLabel;
 	// Marcar
@@ -591,6 +595,7 @@ CSpanningTree SpanningTreeKruskal(CGraph& g);
 
 void Dijkstra(CGraph& g, CVertex* pStart);
 void DijkstraQueue(CGraph& g, CVertex* pStart);
+CGraph DijkstraQueueReturnGraph(CGraph graph, CVertex* pStart);
 
 CTrack SalesmanTrackGreedy(CGraph& g, CVisits& visits);
 
