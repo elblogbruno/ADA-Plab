@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "Graph.h"
 
-
-constexpr auto INFINI = 1.79769e+308;
-
 // SalesmanTrackGreedy =========================================================
 
 CTrack ShortestPath(CGraph& graph, CVertex* begin, CVertex* end) {
@@ -77,7 +74,7 @@ CTrack SalesmanTrackGreedy(CGraph& graph, CVisits &visits)
 
 		/* a. Calculem distancies amb dijkstra per trobar la ciutat mes propera a la que estem ara*/
 		DijkstraQueue(graph, v);
-		double minimum = INFINI;
+		double minimum = numeric_limits<double>::max();
 		
 
 		for (CVertex* b : candidats) {

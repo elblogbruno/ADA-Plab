@@ -23,6 +23,12 @@ int minDistance(CGraph& graph) {
 	return index;
 }
 
+
+/*
+	Primer vam trobar que la funció GetVertex feia retrasar el nostre algorisme, per aixó aquesta funció retorna directament l'objecte en
+	lloc del index com a la funció minDistance a sobre, aixi no fa falta utilitzar la funcio GetVertex(index)
+*/
+
 CVertex* minDistanceFaster(CGraph& graph) {
 	double min_distance = INFINITY;
 	CVertex* index = NULL;
@@ -41,7 +47,7 @@ CVertex* minDistanceFaster(CGraph& graph) {
 
 void Dijkstra(CGraph& graph, CVertex* pStart)
 {
-	// Inicialitzaci� del Graf
+	// Inicialització del Graf
 	
 	for (CVertex& v : graph.m_Vertices) {
 		v.m_DijkstraDistance = numeric_limits<double>::max();
@@ -65,8 +71,8 @@ void Dijkstra(CGraph& graph, CVertex* pStart)
 			}
 		}
 
-
 		pActual = minDistanceFaster(graph);
+		
 		if (pActual == NULL) {
 			break;
 		}

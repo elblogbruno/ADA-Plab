@@ -17,6 +17,3 @@ Track......: Outputs\Graf10_40_4_SalesmanGreedy.TRK
 Leer vertices
 Leer Aristas
 Fin lectura
-
-TIEMPO DE EJECUCION: 0.000009
-FIN EJECUCION COMANDOS

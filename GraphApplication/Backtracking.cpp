@@ -7,15 +7,15 @@
 // SalesmanTrackBacktracking ===================================================
 // =============================================================================
 
-void BacktrackingRecursiu(CGraph& graph, CVisits& visits, CVertex* actNode, CVertex* destinationVertex, CTrack* optTrack) {
+void BacktrackingRecursiu(CGraph& graph, CVisits& visits, CVertex* pActual, CVertex* pDesti, CTrack* optTrack) {
 	
 	bool belongsVisits;
 
-	for (CEdge* e : actNode->m_Edges) {
-		if (visits.m_Vertices.empty() && e->m_pDestination->m_Point == destinationVertex->m_Point) {
+	for (CEdge* e : pActual->m_Edges) {
+		if (visits.m_Vertices.empty() && e->m_pDestination->m_Point == pDesti->m_Point) {
 			return;
 		}
-		else if (!visits.m_Vertices.empty() || e->m_pDestination->m_Point != destinationVertex->m_Point) {
+		else if (!visits.m_Vertices.empty() || e->m_pDestination->m_Point != pDesti->m_Point) {
 			//if (getBelongingPath(e->m_pDestination, stackTrack) != actNodePathID) {
 				//nextNode = new CNode(e->m_pDestination, actNodePathID);
 				//nextNode->setEdgePath(e);
@@ -25,7 +25,8 @@ void BacktrackingRecursiu(CGraph& graph, CVisits& visits, CVertex* actNode, CVer
 					//nextNode->setPathID(nextNode->getPathID() + 1);
 					visits.m_Vertices.remove(e->m_pDestination);
 				}
-				BacktrackingRecursiu(graph, visits, e->m_pDestination, destinationVertex, optTrack);
+				
+				BacktrackingRecursiu(graph, visits, e->m_pDestination, pDesti, optTrack);
 
 				if (belongsVisits) {
 					//nextNode->setPathID(actNodePathID);
@@ -35,6 +36,8 @@ void BacktrackingRecursiu(CGraph& graph, CVisits& visits, CVertex* actNode, CVer
 			//}
 		}
 	}
+
+
 }
 
 CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
