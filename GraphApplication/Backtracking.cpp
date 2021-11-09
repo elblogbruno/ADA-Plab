@@ -101,31 +101,44 @@ vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visit
 	return track_vector;
 }
 
-struct Index
-{
-	int i;
-	int j;
-};
-
-/*
-int getMinDistance(vector<vector<double>> const distance_matrix, int const row) {
-	int index = -1;
-	double min_distance = INFINITY;
-	for (double distance : distance_matrix[row]) {
-		if(distance)
-	}
-	return 
-}
-*/
-
-CTrack SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<CTrack*>> track_matrix, vector<vector<double>> distance_matrix, Index index_actual, vector<CTrack*> track_list) {
-	// track_matrix = Info taulell de camins
+void SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<double>>& distance_matrix, vector<int>& indexVertexsOptims, int index_actual, vector<int>& indexVertexsAVisitar, double* distanciaOptima, double* distanciaActual, vector<bool>& boolVertexsVisitats) {
 	// distance_matrix = Info taulel de distancies
-	// track_list = Vector amb el resultat
+	// indexVertexsOptims = Llista d'indexs que formen el cami optim
+	// index_actual = Posicio actual
+	// indexVertexsAVisitar = Llista dels index que s'han de visitar
+	
+	indexVertexsAVisitar.push_back(index_actual);		// Afegim al cami el node a visitar
+	boolVertexsVisitats[index_actual] = true;			// El marquem com a visitat
+
+	// Si no es sol.lució completa, llavors:
+	if (indexVertexsAVisitar.size() < boolVertexsVisitats.size() && indexVertexsAVisitar.back() != boolVertexsVisitats.size() - 1) {
+		// Per a cada següent possible visita
+		for (int i = 0; i < boolVertexsVisitats.size(); i++) { 
+			// Si el node a visitar no ha estat visitat
+			if (boolVertexsVisitats[i] == false) { 
+				*distanciaActual += distance_matrix[index_actual][i];
+				SalesmanTrackBacktrackingGreedyRecursiu(distance_matrix, indexVertexsOptims, i, indexVertexsAVisitar, distanciaOptima, distanciaActual, boolVertexsVisitats);
+			}
+		}
+	}
+	else {
+		// Si la distancia actual és millor que la distància optima, llavors ...
+		if (*distanciaActual < *distanciaOptima) { 
+			*distanciaOptima = *distanciaOptima;
+			indexVertexsOptims = indexVertexsAVisitar;
+		}
+	}
+
+	// Pas enrere :
+	int index_a_eliminar = indexVertexsAVisitar.back();
+	boolVertexsVisitats[indexVertexsAVisitar.back()] = false;	// Marquem com a no visitat el ultim node del camí d'index
+	if (indexVertexsAVisitar.size() > 1) {
+		*distanciaActual -= distance_matrix[indexVertexsAVisitar.end()[-1]][indexVertexsAVisitar.end()[-2]];	// Restem la distancia del ultim node
+	}
+	else { *distanciaActual = 0; }
+	indexVertexsAVisitar.pop_back();						// Eliminiem l'ultium node de la llista d'index a visitar
 
 
-
-	return CTrack(NULL);
 }
 
 CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
@@ -138,6 +151,7 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 	distance_matrix.resize(visits.GetNVertices(), vector<double>(visits.GetNVertices()));
 	track_matrix.resize(visits.GetNVertices(), vector<CTrack*>(visits.GetNVertices()));
 
+	// Inicialitzacio matrius distance_matrix i track_matrix amb els valors corresponents
 	int row = 0;
 	int col = 0;
 	for (CVertex* vertex : visits.m_Vertices) {
@@ -152,5 +166,27 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 		}
 		col = 0; row++;
 	}
+
+	// Definim variables de control de l'algorisme recursiu
+	vector<int> indexVertexsAVisitar; // No podria ser CVisits?
+	vector<int> indexVertexsOptims; // No podria ser CVisits?
+	vector<bool> boolVertexsVisitats(visits.GetNVertices(), false); // No es pot reutilitzar variable dins del CVertex?
+	int index_vertex_actual = 0;
+	double distanciaOptima = numeric_limits<double>::max();
+	double distanciaActual = 0;
+
+	// Obtenim el cami d'index per recorrer les visites
+	SalesmanTrackBacktrackingGreedyRecursiu(distance_matrix, indexVertexsOptims, index_vertex_actual, indexVertexsAVisitar, &distanciaOptima, &distanciaActual, boolVertexsVisitats);
+
+	// Definim camí buit
+	CTrack track(&graph);
+
+	// Pas d'index a camins
+	int last_index = 0;
+	for (int index : indexVertexsOptims) {
+		track.Append(*track_matrix[index][last_index]);
+		last_index = index;
+	}
+
 	return CTrack(&graph);
 }
