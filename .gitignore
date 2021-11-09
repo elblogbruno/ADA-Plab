@@ -400,3 +400,4 @@ FodyWeavers.xsd
 JPEGLib/
 x64/
 *.txt
+.DS_Store
