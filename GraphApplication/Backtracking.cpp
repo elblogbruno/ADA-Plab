@@ -189,14 +189,16 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 			CTrack* aux = new CTrack(&graph);
 			CVertex* actV = vertex_2;
 			while (actV != vertex) {
-				//aux->AddFirst(actV->m_DijkstraAnterior);
-				aux->AddFirst(actV->m_DijkstraAnterior->m_pReverseEdge);
-				// actV = actV->m_DijkstraAnterior->m_pOrigin;
-				actV = actV->m_DijkstraAnterior->m_pReverseEdge->m_pDestination;
+				aux->AddFirst(actV->m_DijkstraAnterior);
+				//aux->AddFirst(actV->m_DijkstraAnterior->m_pReverseEdge);
+				actV = actV->m_DijkstraAnterior->m_pOrigin;
+				//actV = actV->m_DijkstraAnterior->m_pReverseEdge->m_pDestination;
 			}
 			if (vertex != vertex_2) {
-				track_matrix[row][col] = aux;
-				distance_matrix[row][col] = aux->Length();
+				// track_matrix[row][col] = aux;
+				// distance_matrix[row][col] = aux->Length();
+				track_matrix[col][row] = aux;
+				distance_matrix[col][row] = aux->Length();
 			}
 			col++;
 		}
