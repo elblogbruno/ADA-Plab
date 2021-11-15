@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Graph.h"
 #include <set>
+#include <algorithm>
 
 
 // =============================================================================
@@ -83,6 +84,7 @@ vector<vector<double>> InicialitzaMatrix(CGraph& graph, CVisits& visits)
 }
 */
 
+
 vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visits) {
 	vector <CTrack*> track_vector;
 
@@ -92,13 +94,19 @@ vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visit
 
 		while (pVertexActual != vertex_desti) {
 			// track->AddLast(pVertexActual->m_DijkstraAnterior); // Afegim l'aresta anterior de Dijkstra
-			track->AddFirst(pVertexActual->m_DijkstraAnterior);
+			track->AddFirst(pVertexActual->m_DijkstraAnterior->m_pReverseEdge);
+			// track->AddFirst(pVertexActual->m_DijkstraAnterior);
 			pVertexActual = pVertexActual->m_DijkstraAnterior->m_pOrigin;
 		}
 		track_vector.push_back(track);
 	}
 
 	return track_vector;
+}
+
+bool totsVisitats(vector<bool>& boolVertexsVisitats) {
+	for (bool i : boolVertexsVisitats) { if (i == false) return false; }
+	return true;
 }
 
 void SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<double>>& distance_matrix, vector<int>& indexVertexsOptims, int index_actual, vector<int>& indexVertexsAVisitar, double* distanciaOptima, double* distanciaActual, vector<bool>& boolVertexsVisitats) {
@@ -110,23 +118,25 @@ void SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<double>>& distance_ma
 	indexVertexsAVisitar.push_back(index_actual);		// Afegim al cami el node a visitar
 	boolVertexsVisitats[index_actual] = true;			// El marquem com a visitat
 
-	// Si no es sol.lució completa, llavors:
-	if (indexVertexsAVisitar.size() < boolVertexsVisitats.size() && indexVertexsAVisitar.back() != boolVertexsVisitats.size() - 1) {
+	// Si és sol.lució completa, llavors:
+	if (totsVisitats(boolVertexsVisitats) && indexVertexsAVisitar.back() == boolVertexsVisitats.size() - 1 && indexVertexsAVisitar[0] == 0) {
+	// if (indexVertexsAVisitar.size() == boolVertexsVisitats.size() && indexVertexsAVisitar.back() == boolVertexsVisitats.size() - 1) {
+		// Si la distancia actual és millor que la distància optima, llavors ...
+		if (*distanciaActual < *distanciaOptima) {
+			*distanciaOptima = *distanciaOptima;
+			indexVertexsOptims = indexVertexsAVisitar;
+		}
+	}
+	else {
 		// Per a cada següent possible visita
-		for (int i = 0; i < boolVertexsVisitats.size(); i++) { 
+		for (int i = 1; i < boolVertexsVisitats.size(); i++) {
 			// Si el node a visitar no ha estat visitat
-			if (boolVertexsVisitats[i] == false) { 
+			if (boolVertexsVisitats[i] == false) {
 				*distanciaActual += distance_matrix[index_actual][i];
 				SalesmanTrackBacktrackingGreedyRecursiu(distance_matrix, indexVertexsOptims, i, indexVertexsAVisitar, distanciaOptima, distanciaActual, boolVertexsVisitats);
 			}
 		}
-	}
-	else {
-		// Si la distancia actual és millor que la distància optima, llavors ...
-		if (*distanciaActual < *distanciaOptima) { 
-			*distanciaOptima = *distanciaOptima;
-			indexVertexsOptims = indexVertexsAVisitar;
-		}
+		
 	}
 
 	// Pas enrere :
@@ -141,6 +151,23 @@ void SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<double>>& distance_ma
 
 }
 
+/*
+// Inicialitzacio matrius distance_matrix i track_matrix amb els valors corresponents
+	int row = 0;
+	int col = 0;
+	for (CVertex* vertex : visits.m_Vertices) {
+		// Cridem Dijkstra per a cada node del Graph
+		DijkstraQueue(graph, vertex);
+		// Per a cada node de la fila el guardem a la matriu de distància i matriu track
+		track_matrix[row] = CreateTrack(graph, vertex, visits);
+		for (CVertex* vertex_2 : visits.m_Vertices) {
+			distance_matrix[row][col] = vertex_2->m_DijkstraDistance;
+			CTrack* track = new CTrack(&graph);
+			col++;
+		}
+		col = 0; row++;
+	}
+*/
 CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 {
 	// Definim vector distàncies i camins
@@ -155,16 +182,25 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 	int row = 0;
 	int col = 0;
 	for (CVertex* vertex : visits.m_Vertices) {
+		col = 0;
 		// Cridem Dijkstra per a cada node del Graph
 		DijkstraQueue(graph, vertex);
-		// Per a cada node de la fila el guardem a la matriu de distància i matriu track
-		track_matrix[row] = CreateTrack(graph, vertex, visits);
 		for (CVertex* vertex_2 : visits.m_Vertices) {
-			distance_matrix[row][col] = vertex_2->m_DijkstraDistance;
-			CTrack* track = new CTrack(&graph);
+			CTrack* aux = new CTrack(&graph);
+			CVertex* actV = vertex_2;
+			while (actV != vertex) {
+				//aux->AddFirst(actV->m_DijkstraAnterior);
+				aux->AddFirst(actV->m_DijkstraAnterior->m_pReverseEdge);
+				// actV = actV->m_DijkstraAnterior->m_pOrigin;
+				actV = actV->m_DijkstraAnterior->m_pReverseEdge->m_pDestination;
+			}
+			if (vertex != vertex_2) {
+				track_matrix[row][col] = aux;
+				distance_matrix[row][col] = aux->Length();
+			}
 			col++;
 		}
-		col = 0; row++;
+		row++;
 	}
 
 	// Definim variables de control de l'algorisme recursiu
@@ -184,9 +220,11 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 	// Pas d'index a camins
 	int last_index = 0;
 	for (int index : indexVertexsOptims) {
-		track.Append(*track_matrix[index][last_index]);
+		CTrack* aux_track = track_matrix[index][last_index];
+		if(aux_track != NULL)
+			track.Append(*aux_track);
 		last_index = index;
 	}
 
-	return CTrack(&graph);
+	return track;
 }
