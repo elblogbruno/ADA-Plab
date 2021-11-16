@@ -104,6 +104,27 @@ vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visit
 	return track_vector;
 }
 
+
+bool cami_correcte_2(CVisits& visits, CTrack& cami)
+{
+	for (CVertex* v : visits.m_Vertices)
+	{
+		bool correcte = false;
+		for (CEdge* pE : cami.m_Edges)
+		{
+			if (pE->m_pOrigin == v || pE->m_pDestination == v)
+			{
+				correcte = true;
+				break;
+			}
+		}
+		if (!correcte)
+			return false;
+	}
+	return true;
+}
+
+
 bool totsVisitats(vector<bool>& boolVertexsVisitats) {
 	for (bool i : boolVertexsVisitats) { if (i == false) return false; }
 	return true;
@@ -119,11 +140,11 @@ void SalesmanTrackBacktrackingGreedyRecursiu(vector<vector<double>>& distance_ma
 	boolVertexsVisitats[index_actual] = true;			// El marquem com a visitat
 
 	// Si és sol.lució completa, llavors:
-	if (totsVisitats(boolVertexsVisitats) && indexVertexsAVisitar.back() == boolVertexsVisitats.size() - 1 && indexVertexsAVisitar[0] == 0) {
+	if (totsVisitats(boolVertexsVisitats) && indexVertexsAVisitar.back() == boolVertexsVisitats.size() - 1) {
 	// if (indexVertexsAVisitar.size() == boolVertexsVisitats.size() && indexVertexsAVisitar.back() == boolVertexsVisitats.size() - 1) {
 		// Si la distancia actual és millor que la distància optima, llavors ...
 		if (*distanciaActual < *distanciaOptima) {
-			*distanciaOptima = *distanciaOptima;
+			*distanciaOptima = *distanciaActual;
 			indexVertexsOptims = indexVertexsAVisitar;
 		}
 	}
@@ -218,12 +239,12 @@ CTrack SalesmanTrackBacktrackingGreedy(CGraph& graph, CVisits& visits)
 
 	// Definim camí buit
 	CTrack track(&graph);
-
+		
 	// Pas d'index a camins
 	int last_index = 0;
 	for (int index : indexVertexsOptims) {
 		CTrack* aux_track = track_matrix[index][last_index];
-		if(aux_track != NULL)
+		if (aux_track != NULL)
 			track.Append(*aux_track);
 		last_index = index;
 	}
