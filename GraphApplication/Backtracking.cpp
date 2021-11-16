@@ -112,47 +112,6 @@ CTrack SalesmanTrackBacktracking(CGraph& graph, CVisits& visits)
 // SalesmanTrackBacktrackingGreedy =============================================
 // =============================================================================
 
-
-vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visits) {
-	vector <CTrack*> track_vector;
-
-	for (CVertex* vertex : visits.m_Vertices) {		// Per a cada node a visitar
-		CVertex* pVertexActual = vertex;
-		CTrack* track = new CTrack(&graph);
-
-		while (pVertexActual != vertex_desti) {
-			// track->AddLast(pVertexActual->m_DijkstraAnterior); // Afegim l'aresta anterior de Dijkstra
-			track->AddFirst(pVertexActual->m_DijkstraAnterior->m_pReverseEdge);
-			// track->AddFirst(pVertexActual->m_DijkstraAnterior);
-			pVertexActual = pVertexActual->m_DijkstraAnterior->m_pOrigin;
-		}
-		track_vector.push_back(track);
-	}
-
-	return track_vector;
-}
-
-
-bool cami_correcte_2(CVisits& visits, CTrack& cami)
-{
-	for (CVertex* v : visits.m_Vertices)
-	{
-		bool correcte = false;
-		for (CEdge* pE : cami.m_Edges)
-		{
-			if (pE->m_pOrigin == v || pE->m_pDestination == v)
-			{
-				correcte = true;
-				break;
-			}
-		}
-		if (!correcte)
-			return false;
-	}
-	return true;
-}
-
-
 bool totsVisitats(vector<bool>& boolVertexsVisitats) {
 	for (bool i : boolVertexsVisitats) { if (i == false) return false; }
 	return true;
