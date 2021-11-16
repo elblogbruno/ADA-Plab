@@ -8,50 +8,140 @@
 // SalesmanTrackBacktracking ===================================================
 // =============================================================================
 
-void BacktrackingRecursiu(CGraph& graph, CVisits& visits, CVertex* pActual, CVertex* pDesti, CTrack* finalTrack) {
-	
-	bool belongsVisits;
+/*
+void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double &bestDistance, double &actualDistance) {
 
-	/*if (pActual == pDesti && visits.m_Vertices.empty()) 
-		*finalTrack = *actTrack;*/
-	// pas endavant
-	if (finalTrack->Length() == 0 && visits.GetNVertices() > 0) {
-		for (CEdge* e : pActual->m_Edges) { // Per a cada veí del vèrtex actual veure si es pot passar per ell
+	// Si la distància actual és major que la optima actual, desfem el camí
+	if (bestDistance < actualDistance) {
+		return;		// Cas Base
+	}
 
-			if (visits.m_Vertices.empty() && e->m_pDestination->m_Point == pDesti->m_Point) {
-				BacktrackingRecursiu(graph, visits, pDesti, pDesti, finalTrack);
-			}
-			else if (!visits.m_Vertices.empty() || e->m_pDestination->m_Point != pDesti->m_Point) {
-				//if (getBelongingPath(e->m_pDestination, stackTrack) != actNodePathID) {
-				belongsVisits = visits.MemberP(e->m_pDestination);
-
-				if (belongsVisits) {
-					visits.m_Vertices.remove(e->m_pDestination);
-				}
-
-				BacktrackingRecursiu(graph, visits, e->m_pDestination, pDesti, finalTrack);
-
-				//  fem el pas enrere
-				if (belongsVisits) {
-					//nextNode->setPathID(actNodePathID);
-					visits.Add(e->m_pDestination);
-					finalTrack->AddLast(e);
-				}
-				//}
-			}
+	// Mirem si tots els vertex del camí han estat visitats
+	bool tots_visitats = true;
+	for (CVertex* vertex_a_visitar : visits.m_Vertices) {
+		if (vertex_a_visitar->m_BackTrackingVisit == false) {
+			tots_visitats = false;
+			break;
 		}
 	}
 
+	// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
+	if (tots_visitats && bestDistance > actualDistance) {
+		bestDistance = actualDistance;
+		finalTrack = actualTrack;
+		return;
+	}
+	else {
+		CVertex* vertex_actual = actualTrack.back();	// Seleccionem l'últim vertex del track actual
+
+		for (CEdge* aresta_actual : vertex_actual->m_Edges) { // Per a cada aresta del node actual
+			CVertex* vertex_vei = aresta_actual->m_pDestination;
+
+			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
+				// Pas endavant
+				actualTrack.push_back(vertex_vei);
+				actualDistance += aresta_actual->m_Length;
+				vertex_vei->m_BackTrackingVisit = true;
+				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
+
+				// Pas enrere
+				actualDistance -= aresta_actual->m_Length;
+				actualTrack.pop_back();
+				aresta_actual->m_pDestination->m_BackTrackingVisit = false;
+				vertex_actual = aresta_actual->m_pOrigin;
+			}
+		}
+		
+		return;
+	}
+}
+*/
+void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double& bestDistance, double& actualDistance) {
+
+	// Si la distància actual és major que la optima actual, desfem el camí
+	if (bestDistance < actualDistance) {
+		return;		// Cas Base
+	}
+	else {
+		CVertex* vertex_actual = actualTrack.back();	// Seleccionem l'últim vertex del track actual
+
+		for (CEdge* aresta_actual : vertex_actual->m_Edges) { // Per a cada aresta del node actual
+			CVertex* vertex_vei = aresta_actual->m_pDestination;
+
+			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
+
+				// Mirem si tots els vertex del camí han estat visitats
+				bool tots_visitats = true;
+				for (CVertex* vertex_a_visitar : visits.m_Vertices) {
+					if (vertex_a_visitar->m_BackTrackingVisit == false) {
+						tots_visitats = false;
+						break;
+					}
+				}
+
+				// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
+				if (tots_visitats && bestDistance > actualDistance) {
+					bestDistance = actualDistance;
+					finalTrack = actualTrack;
+					return;
+				}
+
+				// Pas endavant
+				actualTrack.push_back(vertex_vei);
+				actualDistance += aresta_actual->m_Length;
+				vertex_vei->m_BackTrackingVisit = true;
+				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
+
+				// Pas enrere
+				actualDistance -= aresta_actual->m_Length;
+				actualTrack.pop_back();
+				aresta_actual->m_pDestination->m_BackTrackingVisit = false;
+				vertex_actual = aresta_actual->m_pOrigin;
+			}
+		}
+
+		return;
+	}
 }
 
 CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
 {
-	CVisits visitsCopy = visits;
-	CTrack* finalTrack = new CTrack(&graph);
-	
-	BacktrackingRecursiu(graph, visitsCopy, &graph.m_Vertices.front(), visits.m_Vertices.back(), finalTrack);
+	// Inicialitzem el cami optim com el mes llarg i buit
+	vector<CVertex*> bestTrack;
+	bestTrack.push_back(visits.m_Vertices.front());
+	double bestDistance = numeric_limits<double>::max();
 
-	return *finalTrack;
+	// Inicialitzem el cami actual com el mes curt
+	vector<CVertex*> actualTrack;
+	actualTrack.push_back(visits.m_Vertices.front());
+	double actualDistance = 0;
+
+	// Marquem tots els vertexs del graf com a no marcats:
+	/* No cal, ja estan inicialitzats de per si
+	for (CVertex vertex : graph.m_Vertices) {
+		vertex.m_BackTrackingVisit = false;
+	}
+	*/
+	visits.m_Vertices.front()->m_BackTrackingVisit = true; // Marquem el primer coma  visitat
+	
+	BacktrackingRecursiu(visits, visits.m_Vertices.front(), bestTrack, actualTrack, bestDistance, actualDistance);
+
+	CTrack finalTrack(&graph); 
+	
+	while (bestTrack.size() >= 2) {
+		CVertex* vertex_actual = bestTrack[0];
+
+		for (CEdge* edge : vertex_actual->m_Edges) {		// Per a cada aresta del node actual
+			if (edge->m_pDestination == bestTrack[1]) {		// Busquem aquella que porti al següent node
+				finalTrack.AddLast(edge);					// Una vegada trobada l'afegim al cami CTrack
+				bestTrack.erase(bestTrack.begin());			// Eliminem el vertex actual de la llista
+				break;
+			}
+		}
+	}
+
+	
+	return finalTrack;
 }
 
 
