@@ -56,7 +56,7 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 	}
 }
 */
-void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double& bestDistance, double& actualDistance) {
+void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double& bestDistance, double& actualDistance, CVertex* pDesti) {
 
 	// Si la distància actual és major que la optima actual, desfem el camí
 	if (bestDistance < actualDistance) {
@@ -68,19 +68,19 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 		for (CEdge* aresta_actual : vertex_actual->m_Edges) { // Per a cada aresta del node actual
 			CVertex* vertex_vei = aresta_actual->m_pDestination;
 
-			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
+			if (aresta_actual->m_BackTrackingVisit == false || aresta_actual->m_pReverseEdge == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
 
 				// Mirem si tots els vertex del camí han estat visitats
-				bool tots_visitats = true;
+				/*bool tots_visitats = true;
 				for (CVertex* vertex_a_visitar : visits.m_Vertices) {
 					if (vertex_a_visitar->m_BackTrackingVisit == false) {
 						tots_visitats = false;
 						break;
 					}
-				}
+				}*/
 
 				// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
-				if (tots_visitats && bestDistance > actualDistance) {
+				if (vertex_vei->m_Point == pDesti->m_Point && bestDistance > actualDistance) {
 					bestDistance = actualDistance;
 					finalTrack = actualTrack;
 					return;
@@ -89,13 +89,14 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 				// Pas endavant
 				actualTrack.push_back(vertex_vei);
 				actualDistance += aresta_actual->m_Length;
-				vertex_vei->m_BackTrackingVisit = true;
-				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
+				aresta_actual->m_BackTrackingVisit = true;
+				
+				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance, pDesti);
 
 				// Pas enrere
 				actualDistance -= aresta_actual->m_Length;
 				actualTrack.pop_back();
-				aresta_actual->m_pDestination->m_BackTrackingVisit = false;
+				aresta_actual->m_BackTrackingVisit = false;
 				vertex_actual = aresta_actual->m_pOrigin;
 			}
 		}
@@ -124,7 +125,9 @@ CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
 	*/
 	visits.m_Vertices.front()->m_BackTrackingVisit = true; // Marquem el primer coma  visitat
 	
-	BacktrackingRecursiu(visits, visits.m_Vertices.front(), bestTrack, actualTrack, bestDistance, actualDistance);
+	BacktrackingRecursiu(visits, visits.m_Vertices.front(), bestTrack, actualTrack, bestDistance, actualDistance, visits.m_Vertices.back());
+
+	//bestTrack.push_back(visits.m_Vertices.back());
 
 	CTrack finalTrack(&graph); 
 	

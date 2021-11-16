@@ -304,7 +304,7 @@ public:
 	bool m_Marca;
 	// TrobaCami
 	bool m_JaHePassat;
-	bool m_BackTrackingVisit;
+	bool m_BackTrackingVisit = false;
 	bool m_DijkstraVisit;
 	// Métodes
 	CEdge* FindEdge(const char* name);
@@ -338,6 +338,7 @@ public:
 	CVertex* m_pDestination;
 	CEdge* m_pReverseEdge; // En caso de grafo no dirigido cada arista tiene su inverso.
 	bool m_Processed;
+	bool m_BackTrackingVisit = false;
 public:
 	CEdge(const char* name, double length, CVertex* pOrigin, CVertex* pDestination, CEdge* pReverseEdge)
 		: m_Name(name)
