@@ -97,13 +97,6 @@ public:
 	afx_msg void OnBnClickedButtonBranchBound1();
 	afx_msg void OnBnClickedButtonBranchBound2();
 	afx_msg void OnBnClickedButtonBranchBound3();
-	afx_msg void OnBnClickedCheckDisplayNames();
-	afx_msg void OnBnClickedCheckDisplayVertices();
-	afx_msg void OnBnClickedCheckDisplayEdges();
-	afx_msg void OnBnClickedCheckDisplayDistances();
-	afx_msg void OnBnClickedCheckDisplayVisits();
-	afx_msg void OnBnClickedCheckDisplayTrack();
-	afx_msg void OnBnClickedCheckDisplaySpanningTree();
 	afx_msg void OnBnClickedButtonLoadDistances();
 	afx_msg void OnBnClickedButtonSaveDistances();
 	afx_msg void OnBnClickedButtonCleanDistances();
@@ -126,6 +119,14 @@ public:
 	afx_msg void OnBnClickedButtonTrobaCamiBB4();
 	afx_msg void OnBnClickedButtonProbabilistic();
 	afx_msg void OnBnClickedButtonGridGraph();
+	afx_msg void OnViewViewnames();
+	afx_msg void OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
+	afx_msg void OnViewViewvertices();
+	afx_msg void OnViewViewedges();
+	afx_msg void OnViewViewdistances();
+	afx_msg void OnViewViewvisits();
+	afx_msg void OnViewViewtrack();
+	afx_msg void OnViewViewspanningtree();
 };
 
 extern CGraphApplicationDlg* pGraphApplicationDlg;

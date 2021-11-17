@@ -80,7 +80,7 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 				}
 
 				// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
-				if (tots_visitats && bestDistance > actualDistance) {
+				if (tots_visitats && actualDistance < bestDistance) {
 					bestDistance = actualDistance;
 					finalTrack = actualTrack;
 					return;
@@ -90,6 +90,7 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 				actualTrack.push_back(vertex_vei);
 				actualDistance += aresta_actual->m_Length;
 				vertex_vei->m_BackTrackingVisit = true;
+
 				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
 
 				// Pas enrere

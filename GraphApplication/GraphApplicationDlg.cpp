@@ -83,13 +83,6 @@ void CGraphApplicationDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK_PANNING, m_PanningCtrl);
 	DDX_Control(pDX, IDC_CHECK_NEW_VISITS, m_NewVisitsCtrl);
 
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_NAMES, m_DisplayNamesCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_DISTANCES, m_DisplayDistancesCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_VERTICES, m_DisplayVerticesCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_EDGES, m_DisplayEdgesCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_VISITS, m_DisplayVisitsCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_TRACK, m_DisplayTrackCtrl);
-	DDX_Control(pDX, IDC_CHECK_DISPLAY_SPANNING_TREE, m_DisplaySpanningTreeCtrl);
 	DDX_Control(pDX, IDC_BUTTON_BREAK, m_BreakCtrl);
 	DDX_Control(pDX, IDC_BUTTON_CONTINUE, m_ContinueCtrl);
 }
@@ -131,13 +124,6 @@ BEGIN_MESSAGE_MAP(CGraphApplicationDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_BRANCH_BOUND1, &CGraphApplicationDlg::OnBnClickedButtonBranchBound1)
 	ON_BN_CLICKED(IDC_BUTTON_BRANCH_BOUND2, &CGraphApplicationDlg::OnBnClickedButtonBranchBound2)
 	ON_BN_CLICKED(IDC_BUTTON_BRANCH_BOUND3, &CGraphApplicationDlg::OnBnClickedButtonBranchBound3)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_NAMES, &CGraphApplicationDlg::OnBnClickedCheckDisplayNames)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_VERTICES, &CGraphApplicationDlg::OnBnClickedCheckDisplayVertices)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_EDGES, &CGraphApplicationDlg::OnBnClickedCheckDisplayEdges)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_DISTANCES, &CGraphApplicationDlg::OnBnClickedCheckDisplayDistances)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_VISITS, &CGraphApplicationDlg::OnBnClickedCheckDisplayVisits)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_TRACK, &CGraphApplicationDlg::OnBnClickedCheckDisplayTrack)
-	ON_BN_CLICKED(IDC_CHECK_DISPLAY_SPANNING_TREE, &CGraphApplicationDlg::OnBnClickedCheckDisplaySpanningTree)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_DISTANCES, &CGraphApplicationDlg::OnBnClickedButtonLoadDistances)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_DISTANCES, &CGraphApplicationDlg::OnBnClickedButtonSaveDistances)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAN_DISTANCES, &CGraphApplicationDlg::OnBnClickedButtonCleanDistances)
@@ -158,6 +144,14 @@ BEGIN_MESSAGE_MAP(CGraphApplicationDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TROBA_CAMI_B_B4, &CGraphApplicationDlg::OnBnClickedButtonTrobaCamiBB4)
 	ON_BN_CLICKED(IDC_BUTTON_PROBABILISTIC, &CGraphApplicationDlg::OnBnClickedButtonProbabilistic)
 	ON_BN_CLICKED(IDC_BUTTON_GRID_GRAPH, &CGraphApplicationDlg::OnBnClickedButtonGridGraph)
+	ON_COMMAND(ID_VIEW_VIEWNAMES, &CGraphApplicationDlg::OnViewViewnames)
+	ON_WM_INITMENUPOPUP()
+	ON_COMMAND(ID_VIEW_VIEWVERTICES, &CGraphApplicationDlg::OnViewViewvertices)
+	ON_COMMAND(ID_VIEW_VIEWEDGES, &CGraphApplicationDlg::OnViewViewedges)
+	ON_COMMAND(ID_VIEW_VIEWDISTANCES, &CGraphApplicationDlg::OnViewViewdistances)
+	ON_COMMAND(ID_VIEW_VIEWVISITS, &CGraphApplicationDlg::OnViewViewvisits)
+	ON_COMMAND(ID_VIEW_VIEWTRACK, &CGraphApplicationDlg::OnViewViewtrack)
+	ON_COMMAND(ID_VIEW_VIEWSPANNINGTREE, &CGraphApplicationDlg::OnViewViewspanningtree)
 END_MESSAGE_MAP()
 
 
@@ -213,7 +207,7 @@ BOOL CGraphApplicationDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Establecer icono pequeño
 
 	// TODO: agregar aquí inicialización adicional
-
+	cout << "ONINIT OK" << endl;
 	return TRUE;  // Devuelve TRUE  a menos que establezca el foco en un control
 }
 
@@ -1145,19 +1139,12 @@ void CGraphApplicationDlg::OnBnClickedButtonProbabilistic()
 
 void CGraphApplicationDlg::UpdateGrafDisplay()
 {
-	m_DisplayNamesCtrl.SetCheck(m_GraphCtrl.m_DisplayNames? BST_CHECKED : BST_UNCHECKED);
-	m_DisplayDistancesCtrl.SetCheck(m_GraphCtrl.m_DisplayDistances ? BST_CHECKED : BST_UNCHECKED);
-	m_DisplayVerticesCtrl.SetCheck(m_GraphCtrl.m_DisplayVertices ? BST_CHECKED : BST_UNCHECKED);
-	m_DisplayEdgesCtrl.SetCheck(m_GraphCtrl.m_DisplayEdges ? BST_CHECKED : BST_UNCHECKED);
-	m_DisplayVisitsCtrl.SetCheck(m_GraphCtrl.m_DisplayVisits ? BST_CHECKED : BST_UNCHECKED);
-	m_DisplayTrackCtrl.SetCheck(m_GraphCtrl.m_DisplayTrack ? BST_CHECKED : BST_UNCHECKED);
-	m_DisplaySpanningTreeCtrl.SetCheck(m_GraphCtrl.m_DisplaySpanningTree ? BST_CHECKED : BST_UNCHECKED);
 	m_GraphCtrl.Invalidate();
 }
 
 // OnBnClickedCheckDisplayNames ================================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayNames()
+void CGraphApplicationDlg::OnViewViewnames()
 {
 	PrintLog("OnBnClickedCheckDisplayNames");
 	m_GraphCtrl.m_DisplayNames = !m_GraphCtrl.m_DisplayNames;
@@ -1166,7 +1153,7 @@ void CGraphApplicationDlg::OnBnClickedCheckDisplayNames()
 
 // OnBnClickedCheckDisplayVertices =============================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayVertices()
+void CGraphApplicationDlg::OnViewViewvertices()
 {
 	PrintLog("OnBnClickedCheckDisplayVertices");
 	m_GraphCtrl.m_DisplayVertices = !m_GraphCtrl.m_DisplayVertices;
@@ -1175,7 +1162,7 @@ void CGraphApplicationDlg::OnBnClickedCheckDisplayVertices()
 
 // OnBnClickedCheckDisplayEdges ================================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayEdges()
+void CGraphApplicationDlg::OnViewViewedges()
 {
 	PrintLog("OnBnClickedCheckDisplayEdges");
 	m_GraphCtrl.m_DisplayEdges = !m_GraphCtrl.m_DisplayEdges;
@@ -1184,7 +1171,7 @@ void CGraphApplicationDlg::OnBnClickedCheckDisplayEdges()
 
 // OnBnClickedCheckDisplayDistances ============================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayDistances()
+void CGraphApplicationDlg::OnViewViewdistances()
 {
 	PrintLog("OnBnClickedCheckDisplayDistances");
 	m_GraphCtrl.m_DisplayDistances = !m_GraphCtrl.m_DisplayDistances;
@@ -1194,7 +1181,7 @@ void CGraphApplicationDlg::OnBnClickedCheckDisplayDistances()
 
 // OnBnClickedCheckDisplayVisits ===============================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayVisits()
+void CGraphApplicationDlg::OnViewViewvisits()
 {
 	PrintLog("OnBnClickedCheckDisplayVisits");
 	m_GraphCtrl.m_DisplayVisits = !m_GraphCtrl.m_DisplayVisits;
@@ -1203,16 +1190,17 @@ void CGraphApplicationDlg::OnBnClickedCheckDisplayVisits()
 
 // OnBnClickedCheckDisplayTrack ================================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplayTrack()
+void CGraphApplicationDlg::OnViewViewtrack()
 {
 	PrintLog("OnBnClickedCheckDisplayTrack");
 	m_GraphCtrl.m_DisplayTrack = !m_GraphCtrl.m_DisplayTrack;
 	UpdateGrafDisplay();
 }
 
+
 // OnBnClickedCheckDisplaySpanningTree =========================================
 
-void CGraphApplicationDlg::OnBnClickedCheckDisplaySpanningTree()
+void CGraphApplicationDlg::OnViewViewspanningtree()
 {
 	PrintLog("OnBnClickedCheckDisplaySpanningTree");
 	m_GraphCtrl.m_DisplaySpanningTree = !m_GraphCtrl.m_DisplaySpanningTree;
@@ -1601,6 +1589,22 @@ void CGraphApplicationDlg::OnBnClickedButtonTrobaCamiProgramacioDinamicaBB()
 		cout << "EXCEPTION RUNNING ALGORITHM: " << ex.what() << endl;
 	}
 	m_GraphCtrl.Show();
+}
+
+
+void CGraphApplicationDlg::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
+{
+	CDialogEx::OnInitMenuPopup(pPopupMenu, nIndex, bSysMenu);
+	if (nIndex == 3) {
+		// menu View
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWNAMES, m_GraphCtrl.m_DisplayNames ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWDISTANCES, m_GraphCtrl.m_DisplayDistances ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWVERTICES, m_GraphCtrl.m_DisplayVertices ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWEDGES, m_GraphCtrl.m_DisplayEdges ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWVISITS, m_GraphCtrl.m_DisplayVisits ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWTRACK, m_GraphCtrl.m_DisplayTrack ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWSPANNINGTREE, m_GraphCtrl.m_DisplaySpanningTree ? MF_CHECKED : MF_UNCHECKED);
+	}
 }
 
 

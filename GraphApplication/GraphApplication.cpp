@@ -19,14 +19,14 @@
 // IDENTIFICACION DE LOS ALUMNOS ===============================================
 // =============================================================================
 
-CString NombreAlumno1 = "Bruno";
-CString ApellidosAlumno1 = "Moya Ruiz";
-CString NIUAlumno1 = "1568176"; // NIU alumno1
+CString NombreAlumno1 = "nombre del alumno 1";
+CString ApellidosAlumno1 = "apellidos del alumno 1";
+CString NIUAlumno1 = "0000000"; // NIU alumno1
 
 // No rellenar en caso de grupo de un alumno
-CString NombreAlumno2 = "Marc";
-CString ApellidosAlumno2 = "Garrofe Urrutia";
-CString NIUAlumno2 = "1565644"; // NIU alumno2
+CString NombreAlumno2 = "nombre del alumno 2";
+CString ApellidosAlumno2 = "apellidos del alumno 2";
+CString NIUAlumno2 = ""; // NIU alumno2
 
 bool CheckNIU(const char* niu)
 {
