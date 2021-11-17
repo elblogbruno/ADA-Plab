@@ -8,66 +8,49 @@
 // SalesmanTrackBacktracking ===================================================
 // =============================================================================
 
-/*
-void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double &bestDistance, double &actualDistance) {
-
-	// Si la distància actual és major que la optima actual, desfem el camí
-	if (bestDistance < actualDistance) {
-		return;		// Cas Base
-	}
-
-	// Mirem si tots els vertex del camí han estat visitats
-	bool tots_visitats = true;
-	for (CVertex* vertex_a_visitar : visits.m_Vertices) {
-		if (vertex_a_visitar->m_BackTrackingVisit == false) {
-			tots_visitats = false;
-			break;
+/* Un cami correcte significa que totes les arestes han estat visitades */
+bool cami_correcte(CVisits& visits)
+{
+	for (CVertex* v : visits.m_Vertices)
+	{
+		if (v != visits.m_Vertices.back())
+		{
+			bool correcte = false;
+			for (CEdge* pE : v->m_Edges)
+			{
+				if (pE->m_BackTrackingVisit)
+				{
+					correcte = true;
+					break;
+				}
+			}
+			if (!correcte)
+				return false;
 		}
+
 	}
+	return true;
+
+}
+
+void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double& bestDistance, double& actualDistance, CVertex* pDesti) {
 
 	// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
-	if (tots_visitats && bestDistance > actualDistance) {
-		bestDistance = actualDistance;
-		finalTrack = actualTrack;
-		return;
-	}
-	else {
-		CVertex* vertex_actual = actualTrack.back();	// Seleccionem l'últim vertex del track actual
-
-		for (CEdge* aresta_actual : vertex_actual->m_Edges) { // Per a cada aresta del node actual
-			CVertex* vertex_vei = aresta_actual->m_pDestination;
-
-			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
-				// Pas endavant
-				actualTrack.push_back(vertex_vei);
-				actualDistance += aresta_actual->m_Length;
-				vertex_vei->m_BackTrackingVisit = true;
-				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
-
-				// Pas enrere
-				actualDistance -= aresta_actual->m_Length;
-				actualTrack.pop_back();
-				aresta_actual->m_pDestination->m_BackTrackingVisit = false;
-				vertex_actual = aresta_actual->m_pOrigin;
+	if (pActual == pDesti) {
+		if (bestDistance > actualDistance) {
+			if (cami_correcte(visits)) //Un cami correcte significa que totes les arestes han estat visitades 
+			{
+				//actualitzem millor solucio
+				bestDistance = actualDistance;
+				finalTrack = actualTrack;
 			}
 		}
-		
-		return;
-	}
-}
-*/
-void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& finalTrack, vector<CVertex*>& actualTrack, double& bestDistance, double& actualDistance) {
-
-	// Si la distància actual és major que la optima actual, desfem el camí
-	if (bestDistance < actualDistance) {
-		return;		// Cas Base
 	}
 	else {
-		CVertex* vertex_actual = actualTrack.back();	// Seleccionem l'últim vertex del track actual
-
-		for (CEdge* aresta_actual : vertex_actual->m_Edges) { // Per a cada aresta del node actual
+		for (CEdge* aresta_actual : pActual->m_Edges) { // Per a cada aresta del node actual
 			CVertex* vertex_vei = aresta_actual->m_pDestination;
 
+<<<<<<< HEAD
 			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
 
 				// Mirem si tots els vertex del camí han estat visitats
@@ -92,20 +75,26 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 				vertex_vei->m_BackTrackingVisit = true;
 
 				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
+=======
+			if (aresta_actual->m_BackTrackingVisit == false && bestDistance > actualDistance + aresta_actual->m_Length) { // Si no he visitat la aresta sortint tambe ens interesa podar, ja que aquella aresta ens pot portar a un estat pitjor 
+				// Pas endavant
+				actualTrack.push_back(vertex_vei);
+				actualDistance += aresta_actual->m_Length;
+				aresta_actual->m_BackTrackingVisit = true;
+
+				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance, pDesti);
+>>>>>>> 90a9dfc5b3d18430045fbec5b205186b63acd4bd
 
 				// Pas enrere
 				actualDistance -= aresta_actual->m_Length;
 				actualTrack.pop_back();
-				aresta_actual->m_pDestination->m_BackTrackingVisit = false;
-				vertex_actual = aresta_actual->m_pOrigin;
+				aresta_actual->m_BackTrackingVisit = false;
 			}
 		}
-
-		return;
 	}
 }
 
-CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
+CTrack SalesmanTrackBacktracking(CGraph& graph, CVisits& visits)
 {
 	// Inicialitzem el cami optim com el mes llarg i buit
 	vector<CVertex*> bestTrack;
@@ -124,11 +113,13 @@ CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
 	}
 	*/
 	visits.m_Vertices.front()->m_BackTrackingVisit = true; // Marquem el primer coma  visitat
-	
-	BacktrackingRecursiu(visits, visits.m_Vertices.front(), bestTrack, actualTrack, bestDistance, actualDistance);
 
-	CTrack finalTrack(&graph); 
-	
+	BacktrackingRecursiu(visits, visits.m_Vertices.front(), bestTrack, actualTrack, bestDistance, actualDistance, visits.m_Vertices.back());
+
+	//bestTrack.push_back(visits.m_Vertices.back());
+
+	CTrack finalTrack(&graph);
+
 	while (bestTrack.size() >= 2) {
 		CVertex* vertex_actual = bestTrack[0];
 
@@ -141,80 +132,12 @@ CTrack SalesmanTrackBacktracking(CGraph &graph, CVisits &visits)
 		}
 	}
 
-	
+
 	return finalTrack;
 }
-
-
 // =============================================================================
 // SalesmanTrackBacktrackingGreedy =============================================
 // =============================================================================
-
-// Funció per inicialitza la matriu amb les distancies de tots els parells de vertexs a visitar
-/*
-vector<vector<double>> InicialitzaMatrix(CGraph& graph, CVisits& visits)
-{
-	vector<vector<double>> distance_matrix;	// Definim vector
-	// Fem resize amb NxN on N=nº de nodes a visitar
-	distance_matrix.resize(visits.GetNVertices(), vector<double>(visits.GetNVertices())); 
-
-	int row = 0;
-	int col = 0;
-	for (CVertex* vertex : visits.m_Vertices) {
-		// Cridem Dijkstra per a cada node del Graph
-		DijkstraQueue(graph, vertex);	
-
-		// Per a cada node de la fila el guardem a la matriu de distància
-		for (CVertex* vertex_2 : visits.m_Vertices) {
-			distance_matrix[row][col] = vertex_2->m_DijkstraDistance;
-			col++;
-		}
-		col = 0; row++;
-	}
-	return distance_matrix;
-}
-*/
-
-
-vector<CTrack*> CreateTrack(CGraph &graph, CVertex* vertex_desti, CVisits& visits) {
-	vector <CTrack*> track_vector;
-
-	for (CVertex* vertex : visits.m_Vertices) {		// Per a cada node a visitar
-		CVertex* pVertexActual = vertex;
-		CTrack* track = new CTrack(&graph);
-
-		while (pVertexActual != vertex_desti) {
-			// track->AddLast(pVertexActual->m_DijkstraAnterior); // Afegim l'aresta anterior de Dijkstra
-			track->AddFirst(pVertexActual->m_DijkstraAnterior->m_pReverseEdge);
-			// track->AddFirst(pVertexActual->m_DijkstraAnterior);
-			pVertexActual = pVertexActual->m_DijkstraAnterior->m_pOrigin;
-		}
-		track_vector.push_back(track);
-	}
-
-	return track_vector;
-}
-
-
-bool cami_correcte_2(CVisits& visits, CTrack& cami)
-{
-	for (CVertex* v : visits.m_Vertices)
-	{
-		bool correcte = false;
-		for (CEdge* pE : cami.m_Edges)
-		{
-			if (pE->m_pOrigin == v || pE->m_pDestination == v)
-			{
-				correcte = true;
-				break;
-			}
-		}
-		if (!correcte)
-			return false;
-	}
-	return true;
-}
-
 
 bool totsVisitats(vector<bool>& boolVertexsVisitats) {
 	for (bool i : boolVertexsVisitats) { if (i == false) return false; }
