@@ -50,32 +50,6 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 		for (CEdge* aresta_actual : pActual->m_Edges) { // Per a cada aresta del node actual
 			CVertex* vertex_vei = aresta_actual->m_pDestination;
 
-<<<<<<< HEAD
-			if (vertex_vei->m_BackTrackingVisit == false) { // Si no he visitat la aresta sortint, llavors... REVISAR AIXO DE DESTINATION
-
-				// Mirem si tots els vertex del camí han estat visitats
-				bool tots_visitats = true;
-				for (CVertex* vertex_a_visitar : visits.m_Vertices) {
-					if (vertex_a_visitar->m_BackTrackingVisit == false) {
-						tots_visitats = false;
-						break;
-					}
-				}
-
-				// Si tots han estat visitats i la sol.lucio actual es millor que la anterior, es guarda al cami optim en cas que sigui millor
-				if (tots_visitats && actualDistance < bestDistance) {
-					bestDistance = actualDistance;
-					finalTrack = actualTrack;
-					return;
-				}
-
-				// Pas endavant
-				actualTrack.push_back(vertex_vei);
-				actualDistance += aresta_actual->m_Length;
-				vertex_vei->m_BackTrackingVisit = true;
-
-				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance);
-=======
 			if (aresta_actual->m_BackTrackingVisit == false && bestDistance > actualDistance + aresta_actual->m_Length) { // Si no he visitat la aresta sortint tambe ens interesa podar, ja que aquella aresta ens pot portar a un estat pitjor 
 				// Pas endavant
 				actualTrack.push_back(vertex_vei);
@@ -83,7 +57,6 @@ void BacktrackingRecursiu(CVisits& visits, CVertex* pActual, vector<CVertex*>& f
 				aresta_actual->m_BackTrackingVisit = true;
 
 				BacktrackingRecursiu(visits, vertex_vei, finalTrack, actualTrack, bestDistance, actualDistance, pDesti);
->>>>>>> 90a9dfc5b3d18430045fbec5b205186b63acd4bd
 
 				// Pas enrere
 				actualDistance -= aresta_actual->m_Length;
