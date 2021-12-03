@@ -314,19 +314,18 @@ CTrack SalesmanTrackBranchAndBound1(CGraph& graph, CVisits& visits)
 		node_actual = queue.top();	// Seleccionem el node més prometedor
 		queue.pop();				// Borrem últim element
 
-
 		// Per a cada possible fill del node, els afegim a la cua
-		for (int i = node_actual->m_NumVisitesFetes; i < numVisites - 1; i++) {
+		for (int i = node_actual->m_NumVisitesFetes; i < numVisites; i++) {
 			double distance = distance_matrix[node_actual->m_indexNode][node_actual->m_VectorIndexVisites[i]];
 			CBBNode* node_fill = new CBBNode(*node_actual, distance, node_actual->m_VectorIndexVisites[i], i);
 
 			if (node_fill->m_Length < best_node->m_Length) {
 				queue.push(node_fill);
 
-				
 				// Si és solució completa
 				if (node_fill->m_NumVisitesFetes == numVisites) {
 					// Si és millor que la solució actual
+					// if(node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites.back() == numVisites - 1) -> Es mes lent
 					if (node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites[numVisites - 1] == numVisites - 1)
 						best_node = node_fill;
 				}
@@ -462,7 +461,7 @@ CTrack SalesmanTrackBranchAndBound2(CGraph& graph, CVisits &visits)
 					break;
 				}
 				*/
-
+				
 
 				// Si només queda per visitar l'últim node
 				if (node_fill->m_NumVisitesFetes == numVisites - 1) {

@@ -314,19 +314,18 @@ CTrack SalesmanTrackBranchAndBound1(CGraph& graph, CVisits& visits)
 		node_actual = queue.top();	// Seleccionem el node més prometedor
 		queue.pop();				// Borrem últim element
 
-
 		// Per a cada possible fill del node, els afegim a la cua
-		for (int i = node_actual->m_NumVisitesFetes; i < numVisites - 1; i++) {
+		for (int i = node_actual->m_NumVisitesFetes; i < numVisites; i++) {
 			double distance = distance_matrix[node_actual->m_indexNode][node_actual->m_VectorIndexVisites[i]];
 			CBBNode* node_fill = new CBBNode(*node_actual, distance, node_actual->m_VectorIndexVisites[i], i);
 
 			if (node_fill->m_Length < best_node->m_Length) {
 				queue.push(node_fill);
 
-				
 				// Si és solució completa
 				if (node_fill->m_NumVisitesFetes == numVisites) {
 					// Si és millor que la solució actual
+					// if(node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites.back() == numVisites - 1) -> Es mes lent
 					if (node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites[numVisites - 1] == numVisites - 1)
 						best_node = node_fill;
 				}
@@ -361,12 +360,10 @@ CTrack SalesmanTrackBranchAndBound2(CGraph& graph, CVisits &visits)
 
 	
 	// Si el graf té més de 17 visites no el tractem
-	
 	if (numVisites >= 17) {
 		CTrack track(&graph);
 		return track;
 	}
-	
 	
 	// Si només hi han dues visites
 	if (numVisites == 2) {
@@ -438,7 +435,7 @@ CTrack SalesmanTrackBranchAndBound2(CGraph& graph, CVisits &visits)
 
 
 		// Per a cada possible fill del node, els afegim a la cua
-		for (int i = node_actual->m_NumVisitesFetes; i < numVisites - 1; i++) {
+		for (int i = node_actual->m_NumVisitesFetes; i < node_actual->m_VectorIndexVisites.size(); i++) {
 			// CBBNode* node_fill = new CBBNode(*node_actual, distance_matrix, node_actual->m_VectorIndexVisites[i], i, numVisites);
 			double distance = distance_matrix[node_actual->m_indexNode][node_actual->m_VectorIndexVisites[i]];
 			CBBNode* node_fill = new CBBNode(*node_actual, distance, node_actual->m_VectorIndexVisites[i], i, numVisites, min_cami, max_cami);
@@ -462,21 +459,15 @@ CTrack SalesmanTrackBranchAndBound2(CGraph& graph, CVisits &visits)
 					break;
 				}
 				*/
+				queue.push(node_fill);
 
-
-				// Si només queda per visitar l'últim node
-				if (node_fill->m_NumVisitesFetes == numVisites - 1) {
-
-					double distance = distance_matrix[node_fill->m_indexNode][numVisites - 1];
-					CBBNode* node_cami_complert = new CBBNode(*node_fill, distance, numVisites - 1, numVisites - 1, numVisites, min_cami, max_cami);
-
+				// Si és solució completa
+				if (node_fill->m_NumVisitesFetes == numVisites) {
 					// Si és la millor solució
-					if (node_cami_complert->m_Length < best_node->m_Length)
-						best_node = node_cami_complert;
-				}
-				else {
-					queue.push(node_fill);
-				}
+					// if (node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites.back() == numVisites - 1) 
+					if (node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites[numVisites - 1] == numVisites - 1)
+						best_node = node_fill;
+				}					
 			}
 		}	
 	}
@@ -501,40 +492,8 @@ CTrack SalesmanTrackBranchAndBound2(CGraph& graph, CVisits &visits)
 
 CTrack SalesmanTrackBranchAndBound3(CGraph& graph, CVisits &visits)
 {
-	// Definim numero total de visites
-	int numVisites = visits.GetNVertices();
-
-
-	// Si el graf té més de 17 visites no el tractem
-
-	if (numVisites >= 17) {
+	if (visits.GetNVertices() > 16) {
 		CTrack track(&graph);
-		return track;
-	}
-
-
-	// Si només hi han dues visites
-	if (numVisites == 2) {
-		// Definim camí buit
-		CTrack track(&graph);
-
-		// Definim vector distàncies i camins
-		vector<vector<double>> distance_matrix;
-		vector<vector<CTrack*>> track_matrix;
-		initDistanceAndTrackMatrix(graph, visits, distance_matrix, track_matrix);
-
-		// Inicialitzem array de visitas amb seqüència del 0 al n, on n són el número de visites
-		vector<int> index_visits{ 0, 1 };
-
-		// Pas d'index a camins
-		int last_index = 0;
-		for (int index : index_visits) {
-			CTrack* aux_track = track_matrix[index][last_index];
-			if (aux_track != NULL)
-				track.Append(*aux_track);
-			last_index = index;
-		}
-
 		return track;
 	}
 
@@ -543,9 +502,8 @@ CTrack SalesmanTrackBranchAndBound3(CGraph& graph, CVisits &visits)
 	vector<vector<CTrack*>> track_matrix;
 	initDistanceAndTrackMatrix(graph, visits, distance_matrix, track_matrix);
 
-	vector<double> min_cami;
-	vector<double> max_cami;
-	initMinMaxMatrix(min_cami, max_cami, distance_matrix);
+	vector<vector<double>> min_cami;
+	vector<vector<double>> max_cami;
 
 	// Inicialitzem array de visitas amb seqüència del 0 al n, on n són el número de visites
 	vector<int> index_visits;
@@ -554,6 +512,9 @@ CTrack SalesmanTrackBranchAndBound3(CGraph& graph, CVisits &visits)
 
 	// Definim cua de prioritats
 	priority_queue<CBBNode*, std::vector<CBBNode*>, comparator2> queue;
+
+	// Definim numero total de visites
+	int numVisites = visits.GetNVertices();
 
 	// Definim node inicial o arrel
 	CBBNode node_inicial(0, 0, index_visits, 0, distance_matrix, numVisites);
@@ -581,46 +542,37 @@ CTrack SalesmanTrackBranchAndBound3(CGraph& graph, CVisits &visits)
 		node_actual = queue.top();	// Seleccionem el node més prometedor
 		queue.pop();				// Borrem últim element
 
+		// Només seguim expandint si el node actual pot ser millor que el millor node
+		// if (node_actual->m_Length + node_actual->m_WeigthMin < WeigthMaxGlobal) {
+		if (node_actual->m_WeigthMin <= WeigthMaxGlobal) {
 
-		// Per a cada possible fill del node, els afegim a la cua
-		for (int i = node_actual->m_NumVisitesFetes; i < numVisites - 1; i++) {
-			// CBBNode* node_fill = new CBBNode(*node_actual, distance_matrix, node_actual->m_VectorIndexVisites[i], i, numVisites);
-			double distance = distance_matrix[node_actual->m_indexNode][node_actual->m_VectorIndexVisites[i]];
-			CBBNode* node_fill = new CBBNode(*node_actual, distance, node_actual->m_VectorIndexVisites[i], i, numVisites, min_cami, max_cami);
-
-			// Només explorem el node si aquest té una cota mínima menor que la cota màxima global
-			if (node_fill->m_WeigthMin <= WeigthMaxGlobal) {
+			// Per a cada possible fill del node, els afegim a la cua
+			for (int i = node_actual->m_NumVisitesFetes; i < node_actual->m_VectorIndexVisites.size(); i++) {
+				CBBNode* node_fill = new CBBNode(*node_actual, distance_matrix, node_actual->m_VectorIndexVisites[i], i, numVisites);
 
 				// Actualitzem Cota Superior Global en cas que sigui menor que la actual
 				if (node_fill->m_WeigthMax < WeigthMaxGlobal)
 					WeigthMaxGlobal = node_fill->m_WeigthMax;
 
+				// Només explorem el node si aquest té una cota mínima menor que la cota màxima global
+				if (node_fill->m_WeigthMin <= WeigthMaxGlobal) {
 
-				/*
-				// Si és sol·lució final les dues cotes són iguals i tots els nodes són visitats
-				if (node_fill->m_WeigthMax == node_fill->m_WeigthMin && node_fill->m_NumVisitesFetes == numVisites) {
-					best_node = node_fill;
-					// Declarem llista buida
-					priority_queue<CBBNode*, std::vector<CBBNode*>, comparator2> queue_empty;
-					// Marquem la llista de prioritat com a buida
-					swap(queue, queue_empty);
-					break;
-				}
-				*/
-
-
-				// Si només queda per visitar l'últim node
-				if (node_fill->m_NumVisitesFetes == numVisites - 1) {
-
-					double distance = distance_matrix[node_fill->m_indexNode][numVisites - 1];
-					CBBNode* node_cami_complert = new CBBNode(*node_fill, distance, numVisites - 1, numVisites - 1, numVisites, min_cami, max_cami);
-
-					// Si és la millor solució
-					if (node_cami_complert->m_Length < best_node->m_Length)
-						best_node = node_cami_complert;
-				}
-				else {
+					/*
+					// Si és sol·lució final les dues cotes són iguals i tots els nodes són visitats
+					if (node_fill->m_WeigthMax == node_fill->m_WeigthMin && node_fill->m_NumVisitesFetes == numVisites) {
+						best_node = node_fill;
+						// Declarem llista buida
+						priority_queue<CBBNode*, std::vector<CBBNode*>, comparator2> queue_empty;
+						// Marquem la llista de prioritat com a buida
+						swap(queue, queue_empty);
+						break;
+					}
+					*/
 					queue.push(node_fill);
+
+					if (node_fill->m_NumVisitesFetes == numVisites && node_fill->m_Length < best_node->m_Length && node_fill->m_VectorIndexVisites[numVisites - 1] == numVisites - 1) {
+						best_node = node_fill;
+					}
 				}
 			}
 		}
@@ -640,5 +592,3 @@ CTrack SalesmanTrackBranchAndBound3(CGraph& graph, CVisits &visits)
 
 	return track;
 }
-
-
