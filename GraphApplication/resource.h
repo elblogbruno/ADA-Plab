@@ -61,8 +61,11 @@
 #define IDC_BUTTON_BRANCH_BOUND2        1032
 #define IDC_BUTTON_BRANCH_BOUND3        1033
 #define IDC_CHECK_DISPLAY_NAMES         1034
+#define IDC_BUTTON_D_VISITES            1034
 #define IDC_CHECK_DISPLAY_DISTANCES     1035
+#define IDC_BUTTON_D_VERTEX             1035
 #define IDC_CHECK_DISPLAY_VERTICES      1036
+#define IDC_BUTTON_D_ARESTES            1036
 #define IDC_CHECK_DISPLAY_EDGES         1037
 #define IDC_CHECK_DISPLAY_VISITS        1038
 #define IDC_CHECK_DISPLAY_TRACK         1039
@@ -119,14 +122,20 @@
 #define ID_VIEW_VIEWSPANNIGTREE         32797
 #define ID_VIEW_VIEWSPANNINGTREE        32798
 #define ID_CREATE_GRAPHTOPLANNARGRAPH   32799
+#define ID_ANALISIS_GREEDY              32800
+#define ID_ANALISIS_BTPUR               32801
+#define ID_ANALISIS_BTGREEDY            32802
+#define ID_ANALISIS_BB1                 32803
+#define ID_ANALISIS_BB2                 32804
+#define ID_ANALISIS_BB3                 32805
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32800
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_COMMAND_VALUE         32806
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

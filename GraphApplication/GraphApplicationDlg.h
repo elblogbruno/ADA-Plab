@@ -28,6 +28,14 @@ public:
 	bool m_Continue;
 	bool m_Break;
 
+	bool m_AnaliseGreedy = true;
+	bool m_AnaliseBTPur;
+	bool m_AnaliseBTGreedy;
+	bool m_AnaliseBB1;
+	bool m_AnaliseBB2;
+	bool m_AnaliseBB3;
+
+
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// Compatibilidad con DDX/DDV
 
@@ -53,6 +61,13 @@ protected:
 	CButton m_DisplayVisitsCtrl;
 	CButton m_DisplayTrackCtrl;
 	CButton m_DisplaySpanningTreeCtrl;
+
+	CButton m_AnaliseGreedyCtrl;
+	CButton m_AnaliseBTPurCtrl;
+	CButton m_AnaliseBTGreedyCtrl;
+	CButton m_AnaliseBB1Ctrl;
+	CButton m_AnaliseBB2Ctrl;
+	CButton m_AnaliseBB3Ctrl;
 
 	void UpdateGrafDisplay();
 
@@ -88,7 +103,13 @@ public:
 	afx_msg void OnBnClickedButtonCreateRandomVisits();
 	afx_msg void OnBnClickedButtonPrim();
 	afx_msg void OnBnClickedButtonKruskal();
-	afx_msg void OnBnClickedButton3();
+
+	/* Modificacions meva*/
+	afx_msg void OnBnClickedButtonDVertex();
+	afx_msg void OnBnClickedButtonDArestes();
+	afx_msg void OnBnClickedButtonDVisites();
+	/* ----------------- */
+
 	afx_msg void OnBnClickedButtonDijkstra();
 	afx_msg void OnBnClickedButtonDijkstraQueue();
 	afx_msg void OnBnClickedButtonGreedy();
@@ -127,6 +148,13 @@ public:
 	afx_msg void OnViewViewvisits();
 	afx_msg void OnViewViewtrack();
 	afx_msg void OnViewViewspanningtree();
+	/* Modificacions meva*/
+	afx_msg void OnAnalisisGreedy();
+	afx_msg void OnAnalisisBtpur();
+	afx_msg void OnAnalisisBtgreedy();
+	afx_msg void OnAnalisisBb1();
+	afx_msg void OnAnalisisBb2();
+	afx_msg void OnAnalisisBb3();
 };
 
 extern CGraphApplicationDlg* pGraphApplicationDlg;

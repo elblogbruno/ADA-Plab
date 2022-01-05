@@ -747,7 +747,7 @@ void CGraph::RandomCreation(int nVertices, int nEdges)
 				}
 			}
 		}
-		if (i % 100 == 0) cout << i << " vertices created" << endl;
+		//if (i % 100 == 0) cout << i << " vertices created" << endl;
 	}
 	int rep = 0;
 	while (nEdges > 0) {
@@ -769,7 +769,7 @@ void CGraph::RandomCreation(int nVertices, int nEdges)
 			++rep;
 			if (rep > 100) throw exception("CGraph::CrearAleatorio: No se puede encontrar un nuevo edge");
 		}
-		if (nEdges % 100 == 0) cout << nEdges << " edges left to create" << endl;
+		//if (nEdges % 100 == 0) cout << nEdges << " edges left to create" << endl;
 	}
 	/*
 	if (!Invariant()) {

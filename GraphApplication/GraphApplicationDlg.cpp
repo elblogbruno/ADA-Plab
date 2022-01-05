@@ -40,13 +40,13 @@ CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
 }
 
+BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+END_MESSAGE_MAP()
+
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
 
 // =============================================================================
 // CGraphApplicationDlg ========================================================
@@ -118,6 +118,11 @@ BEGIN_MESSAGE_MAP(CGraphApplicationDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_KRUSKAL, &CGraphApplicationDlg::OnBnClickedButtonKruskal)
 	ON_BN_CLICKED(IDC_BUTTON_DIJKSTRA, &CGraphApplicationDlg::OnBnClickedButtonDijkstra)
 	ON_BN_CLICKED(IDC_BUTTON__DIJKSTRA_QUEUE, &CGraphApplicationDlg::OnBnClickedButtonDijkstraQueue)
+	/* Modificacio meva*/
+	ON_BN_CLICKED(IDC_BUTTON_D_VERTEX, &CGraphApplicationDlg::OnBnClickedButtonDVertex)
+	ON_BN_CLICKED(IDC_BUTTON_D_ARESTES, &CGraphApplicationDlg::OnBnClickedButtonDArestes)
+	ON_BN_CLICKED(IDC_BUTTON_D_VISITES, &CGraphApplicationDlg::OnBnClickedButtonDVisites)
+	/* -----------------*/
 	ON_BN_CLICKED(IDC_BUTTON_GREEDY, &CGraphApplicationDlg::OnBnClickedButtonGreedy)
 	ON_BN_CLICKED(IDC_BUTTON_BACKTRACKING, &CGraphApplicationDlg::OnBnClickedButtonBacktracking)
 	ON_BN_CLICKED(IDC_BUTTON_BACKTRACKING_GREEDY, &CGraphApplicationDlg::OnBnClickedButtonBacktrackingGreedy)
@@ -152,6 +157,12 @@ BEGIN_MESSAGE_MAP(CGraphApplicationDlg, CDialogEx)
 	ON_COMMAND(ID_VIEW_VIEWVISITS, &CGraphApplicationDlg::OnViewViewvisits)
 	ON_COMMAND(ID_VIEW_VIEWTRACK, &CGraphApplicationDlg::OnViewViewtrack)
 	ON_COMMAND(ID_VIEW_VIEWSPANNINGTREE, &CGraphApplicationDlg::OnViewViewspanningtree)
+	ON_COMMAND(ID_ANALISIS_GREEDY, &CGraphApplicationDlg::OnAnalisisGreedy)
+	ON_COMMAND(ID_ANALISIS_BTPUR, &CGraphApplicationDlg::OnAnalisisBtpur)
+	ON_COMMAND(ID_ANALISIS_BTGREEDY, &CGraphApplicationDlg::OnAnalisisBtgreedy)
+	ON_COMMAND(ID_ANALISIS_BB1, &CGraphApplicationDlg::OnAnalisisBb1)
+	ON_COMMAND(ID_ANALISIS_BB2, &CGraphApplicationDlg::OnAnalisisBb2)
+	ON_COMMAND(ID_ANALISIS_BB3, &CGraphApplicationDlg::OnAnalisisBb3)
 END_MESSAGE_MAP()
 
 
@@ -890,6 +901,8 @@ void CGraphApplicationDlg::OnBnClickedButtonDijkstra()
 	}
 }
 
+
+
 // OnBnClickedButtonDijkstraQueue ===================================================
 
 void CGraphApplicationDlg::OnBnClickedButtonDijkstraQueue()
@@ -918,6 +931,213 @@ void CGraphApplicationDlg::OnBnClickedButtonDijkstraQueue()
 	}
 }
 
+void CGraphApplicationDlg::OnBnClickedButtonDVertex()
+{
+	try {
+		const int min_nodes = 15;
+		const int max_nodes = 100;
+		const int num_arestes = min_nodes * (min_nodes - 1) / 2; // = 105
+		const int num_visites = 4;
+		
+		if (m_AnaliseGreedy) {
+			cout << "Running greedy " << endl;
+		}
+		else if (m_AnaliseBTPur) {
+			cout << "Running bt pur " << endl;
+		}
+		else if (m_AnaliseBTGreedy) {
+			cout << "Running bt greedy " << endl;
+		}
+		else if (m_AnaliseBB1) {
+			cout << "Running B&B1 " << endl;
+		}
+		else if (m_AnaliseBB2) {
+			cout << "Running B&B2 " << endl;
+		}
+		else if (m_AnaliseBB3) {
+			cout << "Running B&B3 " << endl;
+		}
+
+		for (int i = min_nodes; i < max_nodes; i++) {
+			// 1. Generar graf aleatori amb els parametres seleccionats
+			// 2. Crida funció que troba camí
+			// 3. Contar el temps
+
+			// cout << "Num Nodes " << i << " Num Arestes " << num_arestes << " Num Visites " << num_visites << endl;
+
+			m_Visits.Clear();
+			m_Track.Clear();
+		
+			m_Graph.RandomCreation(i, num_arestes);
+
+			m_Graph.SetDistancesToEdgeLength();
+			m_Visits.RandomCreation(num_visites, false);
+
+			double t0 = Clock();
+			if (m_AnaliseGreedy) {
+				m_Track = SalesmanTrackGreedy(m_Graph, m_Visits);
+			}else if(m_AnaliseBTPur) {
+				m_Track = SalesmanTrackBacktracking(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBTGreedy){
+				m_Track = SalesmanTrackBacktrackingGreedy(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB1) {
+				m_Track = SalesmanTrackBranchAndBound1(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB2) {
+				m_Track = SalesmanTrackBranchAndBound2(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB3) {
+				m_Track = SalesmanTrackBranchAndBound3(m_Graph, m_Visits);
+			}
+			
+			double t = Clock() - t0;
+			cout << t << endl;
+
+		}
+
+		cout << "FI DVertex" << endl;
+	}
+	catch (exception& ex) {
+		PrintLog("ERROR: %s", ex.what());
+		cout << "EXCEPTION RUNNING ALGORITHM: " << ex.what() << endl;
+	}
+}
+
+void CGraphApplicationDlg::OnBnClickedButtonDArestes()
+{
+	try {
+		const int num_nodes = 15;
+		const int num_visites = 4;
+		const int min_arestes = 15;
+		const int max_arestes = 100;
+
+		if (m_AnaliseGreedy) {
+			cout << "Running greedy " << endl;
+		}
+		else if (m_AnaliseBTPur) {
+			cout << "Running bt pur " << endl;
+		}
+		else if (m_AnaliseBTGreedy) {
+			cout << "Running bt greedy " << endl;
+		}
+		else if (m_AnaliseBB1) {
+			cout << "Running B&B1 " << endl;
+		}
+		else if (m_AnaliseBB2) {
+			cout << "Running B&B2 " << endl;
+		}
+		else if (m_AnaliseBB3) {
+			cout << "Running B&B3 " << endl;
+		}
+
+
+		for (int i = min_arestes; i < max_arestes; i++) {
+			m_Visits.Clear();
+			m_Track.Clear();
+			
+			
+			m_Graph.RandomCreation(num_nodes, i);
+			m_Graph.SetDistancesToEdgeLength();
+
+			m_Visits.RandomCreation(num_visites, false);
+
+			double t0 = Clock();
+			if (m_AnaliseGreedy) {
+				m_Track = SalesmanTrackGreedy(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBTPur) {
+				m_Track = SalesmanTrackBacktracking(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBTGreedy) {
+				m_Track = SalesmanTrackBacktrackingGreedy(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB1) {
+				m_Track = SalesmanTrackBranchAndBound1(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB2) {
+				m_Track = SalesmanTrackBranchAndBound2(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB3) {
+				m_Track = SalesmanTrackBranchAndBound3(m_Graph, m_Visits);
+			}
+			double t = Clock() - t0;
+			cout << t << endl;
+
+		}
+		cout << "FI DArestes" << endl;
+	}
+	catch (exception& ex) {
+		PrintLog("ERROR: %s", ex.what());
+		cout << "EXCEPTION RUNNING ALGORITHM: " << ex.what() << endl;
+	}
+}
+
+void CGraphApplicationDlg::OnBnClickedButtonDVisites()
+{
+	try {
+		const int min_visites = 2;
+		const int max_visites = 15;
+		const int num_nodes = 50;
+		const int num_arestes = 200;
+
+		if (m_AnaliseGreedy) {
+			cout << "Running greedy " << endl;
+		}
+		else if (m_AnaliseBTPur) {
+			cout << "Running bt pur " << endl;
+		}
+		else if (m_AnaliseBTGreedy) {
+			cout << "Running bt greedy " << endl;
+		}
+		else if (m_AnaliseBB1) {
+			cout << "Running B&B1 " << endl;
+		}
+		else if (m_AnaliseBB2) {
+			cout << "Running B&B2 " << endl;
+		}
+		else if (m_AnaliseBB3) {
+			cout << "Running B&B3 " << endl;
+		}
+
+		for (int i = min_visites; i <= max_visites; i++) {
+			m_Visits.Clear();
+			m_Track.Clear();
+
+			m_Graph.RandomCreation(num_nodes, num_arestes);
+			m_Graph.SetDistancesToEdgeLength();
+			m_Visits.RandomCreation(i, false);
+
+			double t0 = Clock();
+			if (m_AnaliseGreedy) {
+				m_Track = SalesmanTrackGreedy(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBTPur) {
+				m_Track = SalesmanTrackBacktracking(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBTGreedy) {
+				m_Track = SalesmanTrackBacktrackingGreedy(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB1) {
+				m_Track = SalesmanTrackBranchAndBound1(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB2) {
+				m_Track = SalesmanTrackBranchAndBound2(m_Graph, m_Visits);
+			}
+			else if (m_AnaliseBB3) {
+				m_Track = SalesmanTrackBranchAndBound3(m_Graph, m_Visits);
+			}
+			double t = Clock() - t0;
+			cout << t << endl;
+		}
+		cout << "FI DVisites" << endl;
+	}
+	catch (exception& ex) {
+		PrintLog("ERROR: %s", ex.what());
+		cout << "EXCEPTION RUNNING ALGORITHM: " << ex.what() << endl;
+	}
+}
 // OnBnClickedButtonGreedy =====================================================
 
 void CGraphApplicationDlg::OnBnClickedButtonGreedy()
@@ -1605,6 +1825,50 @@ void CGraphApplicationDlg::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL 
 		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWTRACK, m_GraphCtrl.m_DisplayTrack ? MF_CHECKED : MF_UNCHECKED);
 		pPopupMenu->CheckMenuItem(ID_VIEW_VIEWSPANNINGTREE, m_GraphCtrl.m_DisplaySpanningTree ? MF_CHECKED : MF_UNCHECKED);
 	}
+
+	if (nIndex == 4) {
+		// menu View
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_GREEDY, m_AnaliseGreedy ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_BTPUR, m_AnaliseBTPur ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_BTGREEDY, m_AnaliseBTGreedy ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_BB1, m_AnaliseBB1 ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_BB2, m_AnaliseBB2 ? MF_CHECKED : MF_UNCHECKED);
+		pPopupMenu->CheckMenuItem(ID_ANALISIS_BB3, m_AnaliseBB3 ? MF_CHECKED : MF_UNCHECKED);
+	}
 }
 
 
+void CGraphApplicationDlg::OnAnalisisGreedy()
+{
+	m_AnaliseGreedy = !m_AnaliseGreedy;
+}
+
+
+void CGraphApplicationDlg::OnAnalisisBtpur()
+{
+	m_AnaliseBTPur = !m_AnaliseBTPur;
+}
+
+
+void CGraphApplicationDlg::OnAnalisisBtgreedy()
+{
+	m_AnaliseBTGreedy = !m_AnaliseBTGreedy;
+}
+
+
+void CGraphApplicationDlg::OnAnalisisBb1()
+{
+	m_AnaliseBB1 = !m_AnaliseBB1;
+}
+
+
+void CGraphApplicationDlg::OnAnalisisBb2()
+{
+	m_AnaliseBB2 = !m_AnaliseBB2;
+}
+
+
+void CGraphApplicationDlg::OnAnalisisBb3()
+{
+	m_AnaliseBB3 = !m_AnaliseBB3;
+}
